@@ -58,7 +58,29 @@ public class ExpenseDAO {
         return expenses;
     }
 
-    
+    // Method to fetch monthly summary (total amount spent in a specific month and year)
+    public double getMonthlySummary(int month, int year) {
+        double total = 0;
+        String query = "SELECT SUM(amount) FROM expenses WHERE MONTH(date) = ? AND YEAR(date) = ?";
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, month);
+            statement.setInt(2, year);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                total = resultSet.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+   
 }
 
 
