@@ -80,7 +80,31 @@ public class ExpenseDAO {
         return total;
     }
 
-   
+    // Method to export expenses to CSV
+    public void exportExpensesToCSV(String filePath) {
+        String query = "SELECT * FROM expenses";
+        
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery();
+             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+
+            writer.write("ID,Amount,Category,Description,Date\n");
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                double amount = resultSet.getDouble("amount");
+                String category = resultSet.getString("category");
+                String description = resultSet.getString("description");
+                String date = resultSet.getString("date");
+
+                writer.write(id + "," + amount + "," + category + "," + description + "," + date + "\n");
+            }
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
