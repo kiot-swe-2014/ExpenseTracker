@@ -31,6 +31,33 @@ public class ExpenseDAO {
         }
     }
 
+    // Method to fetch filtered expenses from the database
+    public List<String[]> getFilteredExpenses(String category, String sortOrder) {
+        List<String[]> expenses = new ArrayList<>();
+        String query = "SELECT * FROM expenses WHERE category LIKE ? ORDER BY date " + sortOrder;
+
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, category);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String[] expense = new String[5];
+                expense[0] = String.valueOf(resultSet.getInt("id"));
+                expense[1] = String.valueOf(resultSet.getDouble("amount"));
+                expense[2] = resultSet.getString("category");
+                expense[3] = resultSet.getString("description");
+                expense[4] = resultSet.getString("date");
+                expenses.add(expense);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return expenses;
+    }
+
     
 }
 
