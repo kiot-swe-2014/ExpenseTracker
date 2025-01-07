@@ -54,7 +54,7 @@ public class LoginGUI extends JFrame {
 
                 if (userDAO.loginUser(username, password)) {
                     JOptionPane.showMessageDialog(null, "Login successful!");
-                    new ExpenseTrackerGUI().setVisible(true);
+                    new ExpenseTrackerGUI(username).setVisible(true);
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid username or password.");
@@ -75,4 +75,7 @@ public class LoginGUI extends JFrame {
         SwingUtilities.invokeLater(() -> new LoginGUI().setVisible(true));
     }
 }
+
+
+
 
